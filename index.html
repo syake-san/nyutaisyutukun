@@ -162,21 +162,28 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // room1
-onValue(ref(db, "room1"), (snapshot) => {
+onValue(ref(db, ""), (snapshot) => {
     const data = snapshot.val();
-    if (!data) return; // データが空の場合の安全対策
+    if (!data) return; 
 
-    document.getElementById("room1_status").innerHTML = data.status;
-    document.getElementById("room1_exit").innerHTML = data.exit_time;
+    // マイコンから送られてくるルート直下の status と exit_time を room1 に表示
+    const currentStatus = data.status;
+    const currentExitTime = data.exit_time;
 
-    // マイコン側が "in" / "out" で送信している場合は、条件式をそれに合わせる必要があります
-    if (data.status == "在室中" || data.status == "in") {
+    // 画面の文字を更新
+    if (currentStatus == "in") {
+        document.getElementById("room1_status").innerHTML = "在室中";
         document.getElementById("room1_status").className = "status present";
-    } else {
+    } else if (currentStatus == "out") {
+        document.getElementById("room1_status").innerHTML = "退室済み";
         document.getElementById("room1_status").className = "status absent";
+    } else {
+        document.getElementById("room1_status").innerHTML = currentStatus;
     }
+    
+    document.getElementById("room1_exit").innerHTML = currentExitTime;
 });
-
+    
 // room2
 onValue(ref(db, "room2"), (snapshot) => {
     const data = snapshot.val();
