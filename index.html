@@ -142,7 +142,8 @@ h1{
 
 <script type="module">
 
-import { initializeApp } from "https://nyutaisitsukun-default-rtdb.asia-southeast1.firebasedatabase.app/]";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+    
 import { getDatabase, ref, onValue }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
@@ -152,6 +153,9 @@ const firebaseConfig = {
     authDomain: "nyutaisitsukun.firebaseapp.com",
     databaseURL: "https://nyutaisitsukun-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "nyutaisitsukun"
+    storageBucket: "nyutaisitsukun.firebasestorage.app",
+    messagingSenderId: "735689921629",
+    appId: "1:735689921629:web:239ae6ade0f17ec313e9b4"
 };
 
 const app = initializeApp(firebaseConfig);
