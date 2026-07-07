@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="2">
+<title>入退出くん</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background-color:snow;
+}
+
+.container{
+    margin:50px auto;
+    width: 1200px;
+    background: #d3d3d3;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px #d3d3d3;
+}
+
+.status{
+    font-size:30px;
+    font-weight:bold;
+    margin:20px;
+}
+
+.present{
+    color:gold;
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    background: black;
+    border-left: double 7px darkred;
+    border-right: double 7px darkred;
+}
+.present p {
+    margin: 0; 
+    padding: 0;
+}
+
+.absent{
+    color:red;
+}
+
+.time{
+    font-size:20px;
+    color:black;
+}
+
+header{
+    display: flex;
+    margin:50px auto;
+    width: 1200px;
+    height: 100px;
+    padding:20px;
+    box-shadow:0 0 10px gray;
+    background-color: gray;
+    align-items: center;
+}
+
+.title{
+    margin-right: auto;
+}
+
+.item{
+    list-style: none;
+    display: inline-block;
+    padding: 10px;
+     margin:2em 0;
+    position: relative;
+    padding: 0.5em 1.5em;
+    border-top: solid 2px black;
+    border-bottom: solid 2px black;
+}
+.item:before, .item:after{
+    content: '';
+    position: absolute;
+    top: -10px;
+    width: 2px;
+    height: -webkit-calc(100% + 20px);
+    height: calc(100% + 20px);
+    background-color: black;
+}
+.item:before {left: 10px;}
+.item:after {right: 10px;}
+.item p {
+    margin: 0; 
+    padding: 0;
+}
+
+h1{
+    font-family: serif;
+}
+</style>
+
+</head>
+
+<body>
+    <header>
+        <h1 style="text-align: left;" class="present">入退出くん</h1>
+        <nav>
+            <ul class="group">
+                <li class="item"><a href="#">工学部</a></li>
+                <li class="item"><a href="#">情報工学部</a></li>
+                <li class="item"><a href="#">保健医療学部</a></li>
+                <li class="item"><a href="#">未来デザイン学部</a></li>
+            </ul>
+        </nav>
+    </header>
+
+<div class="container">
+
+    <h1 style="text-align: left;" class="present">工学部</h1>
+
+    <h2 style="text-align: left;">○○先生 ○○号室</h2>
+
+    <h2 style="text-align: left;">在室状況</h2>
+    <div id="room1_status" class="status absent" style="text-align:left;">
+        読み込み中...
+    </div>
+
+    <h2 style="text-align: left;">退出時刻</h2>
+    <div id="room1_exit" class="time" style="text-align:left;">
+        ----
+    </div>
+
+    <h2 style="text-align: left;">○○先生 ○○号室</h2>
+
+    <h2 style="text-align: left;">在室状況</h2>
+    <div id="room2_status" class="status absent" style="text-align:left;">
+        読み込み中...
+    </div>
+
+    <h2 style="text-align: left;">退出時刻</h2>
+    <div id="room2_exit" class="time" style="text-align:left;">
+    ----
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://nyutaisitsukun-default-rtdb.asia-southeast1.firebasedatabase.app/]";
+import { getDatabase, ref, onValue }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+// Firebaseの設定
+const firebaseConfig = {
+    apiKey: "AIzaSyBktIe4YVx9pn5VDDQPfrUND5RwTnqWGuI",
+    authDomain: "nyutaisitsukun.firebaseapp.com",
+    databaseURL: "https://nyutaisitsukun-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "nyutaisitsukun"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// room1
+onValue(ref(db,"room1"), (snapshot)=>{
+
+    const data = snapshot.val();
+
+    document.getElementById("room1_status").innerHTML = data.status;
+    document.getElementById("room1_exit").innerHTML = data.exit_time;
+
+    if(data.status=="在室中"){
+        document.getElementById("room1_status").className="status present";
+    }else{
+        document.getElementById("room1_status").className="status absent";
+    }
+
+});
+
+// room2
+onValue(ref(db,"room2"), (snapshot)=>{
+
+    const data = snapshot.val();
+
+    document.getElementById("room2_status").innerHTML = data.status;
+    document.getElementById("room2_exit").innerHTML = data.exit_time;
+
+    if(data.status=="在室中"){
+        document.getElementById("room2_status").className="status present";
+    }else{
+        document.getElementById("room2_status").className="status absent";
+    }
+
+});
+
+</script>
+
+</body>
+</html>
