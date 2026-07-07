@@ -142,7 +142,7 @@ h1{
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     
 import { getDatabase, ref, onValue }
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
@@ -152,7 +152,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyBktIe4YVx9pn5VDDQPfrUND5RwTnqWGuI",
     authDomain: "nyutaisitsukun.firebaseapp.com",
     databaseURL: "https://nyutaisitsukun-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "nyutaisitsukun"
+    projectId: "nyutaisitsukun",
     storageBucket: "nyutaisitsukun.firebasestorage.app",
     messagingSenderId: "735689921629",
     appId: "1:735689921629:web:239ae6ade0f17ec313e9b4"
@@ -162,37 +162,36 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // room1
-onValue(ref(db,"room1"), (snapshot)=>{
-
+onValue(ref(db, "room1"), (snapshot) => {
     const data = snapshot.val();
+    if (!data) return; // データが空の場合の安全対策
 
     document.getElementById("room1_status").innerHTML = data.status;
     document.getElementById("room1_exit").innerHTML = data.exit_time;
 
-    if(data.status=="在室中"){
-        document.getElementById("room1_status").className="status present";
-    }else{
-        document.getElementById("room1_status").className="status absent";
+    // マイコン側が "in" / "out" で送信している場合は、条件式をそれに合わせる必要があります
+    if (data.status == "在室中" || data.status == "in") {
+        document.getElementById("room1_status").className = "status present";
+    } else {
+        document.getElementById("room1_status").className = "status absent";
     }
-
 });
 
 // room2
-onValue(ref(db,"room2"), (snapshot)=>{
-
+onValue(ref(db, "room2"), (snapshot) => {
     const data = snapshot.val();
+    if (!data) return; // データが空の場合の安全対策
 
     document.getElementById("room2_status").innerHTML = data.status;
     document.getElementById("room2_exit").innerHTML = data.exit_time;
 
-    if(data.status=="在室中"){
-        document.getElementById("room2_status").className="status present";
-    }else{
-        document.getElementById("room2_status").className="status absent";
+    if (data.status == "在室中" || data.status == "in") {
+        document.getElementById("room2_status").className = "status present";
+    } else {
+        document.getElementById("room2_status").className = "status absent";
     }
-
 });
-
+    
 </script>
 
 </body>
